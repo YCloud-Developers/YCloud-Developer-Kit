@@ -1,6 +1,6 @@
 # YCloud Developer Kit
 
-适用版本：0.7.8
+适用版本：0.7.9
 
 用自然语言规划 YCloud 集成、生成服务端代码，并通过本地模拟测试检查流程。整套包含 17 个 Skill，覆盖 88 个 API 操作及鉴权、Webhook 接收两项跨领域能力。
 
@@ -36,7 +36,7 @@ npx skills add YCloud-Developers/YCloud-Developer-Kit --skill '*' -a codex --cop
 
 ## 插件总包
 
-[下载 0.7.8](https://github.com/YCloud-Developers/YCloud-Developer-Kit/releases/tag/v0.7.8)：Codex、Claude Code 和 WorkBuddy 各提供一个完整插件 ZIP，每个都包含全部 17 个 Skill。发行附件同时提供中文产品指南、分发清单及 SHA256SUMS。
+[下载 0.7.9](https://github.com/YCloud-Developers/YCloud-Developer-Kit/releases/tag/v0.7.9)：Codex、Claude Code 和 WorkBuddy 各提供一个完整插件 ZIP，每个都包含全部 17 个 Skill。发行附件同时提供中文产品指南、分发清单及 SHA256SUMS。
 
 ## 使用边界
 
