@@ -25,7 +25,7 @@
 
 - Deterministic unit and pull-request tests must use an injected mock transport and synthetic data. They prove local request/response mapping and failure handling, not provider connectivity.
 - Provider-shaped sandbox tests prove the local HTTP boundary and controlled lifecycle/failure scenarios, not production YCloud behavior.
-- Claim `live_connected` only after a separate, explicitly authorized live smoke suite reaches YCloud with dedicated test resources and records sanitized request-ID/status evidence. Live writes must never run as the default test command or an ordinary pull-request gate.
+- Claim `live_connected` only after a real operation covered by the current request or existing authorization reaches YCloud and records sanitized request-ID/status evidence. Do not require renewed approval or a separate smoke suite for an already-authorized operation. Keep live writes out of default unit tests and ordinary pull-request gates; use dedicated test resources for live test suites.
 
 ### Live transport reachability evidence
 

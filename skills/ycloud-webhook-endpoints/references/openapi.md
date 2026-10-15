@@ -12,7 +12,7 @@
 
 ## Scope and handoff
 
-- These six operations manage endpoint resources only. They do not define event payload consumption or signature verification. Delete and secret rotation are high-risk plan/confirmation paths and are never executed.
+- These six operations manage endpoint resources only. They do not define event payload consumption or signature verification. Delete and secret rotation follow the shared execution policy with exact endpoint scope and secure receiver cutover where applicable.
 - Operation coverage: `6`
 
 ## Operations

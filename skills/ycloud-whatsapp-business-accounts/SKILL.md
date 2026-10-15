@@ -1,26 +1,35 @@
 ---
 name: ycloud-whatsapp-business-accounts
-description: Design, implement locally, or evaluate YCloud WhatsApp Business Account listing, retrieval, and automatic creative optimization operations. Use for WABA inventory or ACO integration; exclude phone-number management, messaging, template lifecycle, broad planning, and real API mutations.
+description: Execute, design, implement, or evaluate YCloud WhatsApp Business Account listing, retrieval, and automatic creative optimization operations. Use for WABA inventory or ACO integration; exclude phone-number management, messaging, template lifecycle, broad planning.
 ---
 
 # YCloud WhatsApp Business Accounts
 
-Design or implement contract-aware support for the four WABA operations in the
-generated reference. Never call YCloud or Meta, read credentials or customer
-data, or mutate a real WABA.
+Query WhatsApp Business Accounts and manage automatic creative optimization,
+or design, implement, and evaluate the four documented operations.
 
 ## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
 
-Honor Architect handoffs for `scope`, `deliverable`, `mutation`, capability IDs,
-project seams, and expected evidence. Without one, default to focused,
-read-only guidance unless the user explicitly requests local implementation.
-Local-write authorization permits request models/builders, adapters, handlers,
-service bindings, mocks, synthetic fixtures, and no-network tests inside
-the scoped project. The ACO PATCH operation is mock-only: local implementation
-does not authorize a real enrollment update. Reuse the project's existing
-interface stack and preserve concurrent work.
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 Load [the generated OpenAPI reference](references/openapi.md) and
 [the reviewed runtime reference](references/runtime.md) only after this skill is
@@ -88,9 +97,9 @@ tracking are out of scope.
    ACO PATCH automatically. Honor documented `Retry-After` before later traffic
    without treating it as proof that replay is safe.
 7. Use placeholders such as `<YCLOUD_API_KEY>`, `<WABA_ID>`, and synthetic
-   feature values. Keep authentication server-side and hand credential storage
-   to `ycloud-api-authentication`; do not inspect `.env`, secret stores, logs, or
-   live responses.
+   feature values in examples and tests. For live work, use the scoped WABA
+   identity and inspect its response. Keep credential injection server-side
+   through `ycloud-api-authentication` without exposing the value.
 
 ## Validation and evidence
 
@@ -111,7 +120,7 @@ Return these sections, adapted to the requested deliverable:
 3. **Contract versus policy** — identify YCloud guarantees separately from local
    validation, approvals, persistence, retries, and rollback choices.
 4. **Tests and evidence** — synthetic cases and actual no-network results.
-5. **CANNOT** — real API/Meta calls, credentials/customer data, guessed SDK
+5. **CANNOT** — out-of-scope actions, secret disclosure, guessed SDK
    methods, unsupported operations, unknown lifecycle behavior, and any missing
    facts. Do not put confirmed pagination, error-envelope, request-ID, or ACO
    behavior in `CANNOT`.
@@ -121,9 +130,9 @@ Return these sections, adapted to the requested deliverable:
    analytics to `ycloud-whatsapp-templates`. Return to Architect with capability
    status, artifacts, tests, unknowns, and outgoing handoffs.
 
-## Safety stop
+## Execution safeguards
 
-YCloud Provider API calls are prohibited during Skill execution, including
-nominally read-only GETs. All mutations are mock-only. Stop before any request
-that would use a real API key, WABA/customer identifier, or live YCloud/Meta
-resource.
+Execute only within the account, environment, targets, and effects covered by
+the current request or prior authorization. Ask for an unresolved material
+boundary, not for repeated approval of the same operation. Verify live results
+and keep mock evidence separate; never blindly replay an ambiguous mutation.

@@ -1,6 +1,6 @@
 ---
 name: ycloud-unsubscribers
-description: Design, implement locally, or evaluate YCloud customer unsubscribe creation, lookup, listing, and deletion. Use for opt-out records and message-eligibility evidence; exclude Contact CRUD, message sending, provider delivery status, and real API operations.
+description: Execute, design, implement, or evaluate YCloud customer unsubscribe creation, lookup, listing, and deletion. Use for opt-out records and message-eligibility evidence; exclude Contact CRUD, message sending, provider delivery status.
 ---
 
 # YCloud Unsubscribers
@@ -9,22 +9,31 @@ For `unsubscriber-list`, read
 [`references/shared/pagination-contract.md`](references/shared/pagination-contract.md)
 with the generated OpenAPI/runtime references.
 
-Design or implement contract-aware handling for the five Unsubscriber operations
-in the pinned reference. Use synthetic customers and a mock transport only.
-Never call YCloud, inspect credentials or customer data, or mutate a real
-unsubscribe record.
+Manage customer unsubscribe records or design, implement, and evaluate their
+integration using the five operations in the pinned reference.
 
 ## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
 
-Honor an Architect or Contact handoff for scope, deliverable, mutation,
-capability IDs, project seams, confirmed customer identity, and expected
-evidence. Without one, default to focused read-only guidance unless the user
-explicitly requests local implementation. Local-write authorization permits
-request/response models, adapters, handlers, mock fixtures, policy-evidence
-mappers, and no-network tests in the scoped project. Create and delete remain
-mock-only, and even GET operations must use mocks in this workflow.
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 After this Skill is selected, read the generated [OpenAPI
 contract](references/openapi.md) and reviewed [runtime
@@ -94,10 +103,10 @@ marketing consent design, and non-WhatsApp channel behavior are out of scope.
    or delete has an ambiguous outcome. The contract defines no general
    idempotency key, so never replay either mutation automatically. Honor
    `Retry-After` before later traffic without treating it as replay authority.
-7. Use placeholders such as `<YCLOUD_API_KEY>` and `<E164_CUSTOMER>` and fully
-   synthetic fixtures. Keep credentials server-side and hand credential work to
-   Authentication. Do not read `.env`, secret stores, production logs, live
-   Contacts, Unsubscribers, or Messages.
+7. Use placeholders such as `<YCLOUD_API_KEY>` and `<E164_CUSTOMER>` in
+   synthetic fixtures. For live work, use scoped customer/channel identities
+   and inject credentials server-side through Authentication; do not disclose
+   keys or retrieve unrelated business data.
 
 ## Eligibility-policy evidence
 
@@ -135,7 +144,7 @@ Return these sections, adapted to the requested deliverable:
    eligibility, cache, pagination-budget, retry, and audit choices.
 4. **Tests and evidence** — synthetic cases, actual no-network results, and
    pagination completeness.
-5. **CANNOT** — live calls, credentials/customer data, unsupported operations,
+5. **CANNOT** — out-of-scope actions, secret disclosure, unsupported operations,
    guessed SDK methods, automatic mutation replay, unconfirmed idempotency, or
    provider send/delivery/final-status claims.
 6. **Handoff** — consume confirmed customer identity evidence from Contact;
@@ -145,9 +154,9 @@ Return these sections, adapted to the requested deliverable:
    merely because an Unsubscriber exists, or that an eligible result guarantees
    a message will be accepted or delivered.
 
-## Safety stop
+## Execution safeguards
 
-YCloud Provider API calls are prohibited during Skill execution, including
-nominally read-only GETs. All mutations are mock-only. Stop before any request
-that would use a real API key, customer identifier, Contact, Unsubscriber,
-Message, or other live YCloud data.
+Execute only within the account, environment, targets, and effects covered by
+the current request or prior authorization. Ask for an unresolved material
+boundary, not for repeated approval of the same operation. Verify live results
+and keep mock evidence separate; never blindly replay an ambiguous mutation.

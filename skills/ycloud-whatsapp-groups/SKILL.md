@@ -1,26 +1,35 @@
 ---
 name: ycloud-whatsapp-groups
-description: Design, implement locally, or evaluate all 12 YCloud WhatsApp Groups operations, including asynchronous lifecycle tracking, join requests, participants, settings, invite links, and the invite-link message handoff. Use for group management; exclude ordinary or Flow message sending, Flow lifecycle, and real API mutations.
+description: Execute, design, implement, or evaluate all 12 YCloud WhatsApp Groups operations, including asynchronous lifecycle tracking, join requests, participants, settings, invite links, and the invite-link message handoff. Use for group management; exclude ordinary or Flow message sending, Flow lifecycle.
 ---
 
 # YCloud WhatsApp Groups
 
-Design or implement contract-aware WhatsApp group management against mocks only.
-Never call YCloud, perform a real group or message mutation, read credentials or
-customer data, or claim that an accepted request reached its final state.
+Manage WhatsApp groups or design, implement, and evaluate their integration.
+Distinguish an accepted request from its final asynchronous state.
 
-## Execution and authority boundary
+## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
 
-Honor an Architect handoff for `scope`, `deliverable`, `mutation`, capability
-IDs, project seams, and evidence. Without one, default to focused, read-only
-guidance unless the user explicitly requests local implementation. Local-write
-authorization permits request models/builders, adapters, handlers, service
-bindings, mocks, fixtures, and no-network tests inside the scoped project. Every
-mutating operation remains mock-only; local-write authorization does not
-authorize a real create, delete, update, participant action, invite-link reset,
-join-request action, or message send.
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 Keep claims in three authority layers:
 
@@ -94,7 +103,7 @@ invite-link-message operation remains in this Skill. Flow lifecycle belongs to
 5. Use placeholders and synthetic IDs/data in examples and tests. Use an
    SDK-specific method only when the project contains a confirmed SDK artifact
    and version; an `operationId` is not an SDK method. Keep `X-API-Key` injection
-   server-side through the Authentication handoff without reading a real key.
+   server-side through the Authentication handoff without exposing a real key.
 6. Treat mutating timeouts or lost responses as ambiguous outcomes. Never
    blindly replay a create, delete, update, participant action, invite-link
    reset, join-request action, or message send. Any outbox, idempotency key,
@@ -121,10 +130,10 @@ reliability belong to `ycloud-webhook-endpoints`.
 ## Mutation safeguards and tests
 
 Deletes, participant removals, join-request decisions, invite-link resets, and
-settings changes can be disruptive or irreversible. Implement only local mock
-behavior and no-network tests. For any future external workflow, stop before the
-call, identify the exact opaque target IDs and impact, require explicit
-operation-specific confirmation, and treat an ambiguous result as unresolved.
+settings changes can be disruptive or irreversible. Resolve exact target IDs
+and effects before acting. Proceed under the current request or existing
+authorization; ask only for missing scope or newly uncovered effects. Use
+no-network tests for local code and reconcile ambiguous live results.
 
 Tests should cover every selected route and schema plus relevant negative cases:
 path asymmetry, E.164 validation, subject/description limits, join mode default,
@@ -150,8 +159,7 @@ behavioral tests.
 ### CANNOT
 
 List unsupported operations, missing project facts, source conflicts, unconfirmed
-SDK behavior, live credentials/customer data, real API calls, external
-mutations, automatic replay, final-state assumptions, and delivery claims.
+SDK behavior, secret disclosure, out-of-scope access, automatic replay, final-state assumptions, and delivery claims.
 Do not move documented async `pending`/`requestId` behavior or known partial
 join-request results into `CANNOT`.
 

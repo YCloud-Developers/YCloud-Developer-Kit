@@ -12,7 +12,7 @@
 
 ## Scope and handoff
 
-- These seven operations manage template lifecycle and analytics only. Sending an existing template is a Messages concern. Create, edit, delete, and other external mutations are plan/confirmation only in this MVP; delete is high risk.
+- These seven operations manage template lifecycle and analytics only. Sending an existing template is a Messages concern. Apply the shared execution policy to live operations, including exact WABA/name/language scope for deletion and full-replacement semantics for edits.
 - Operation coverage: `7`
 
 ## Operations

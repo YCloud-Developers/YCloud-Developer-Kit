@@ -12,7 +12,7 @@
 
 ## Scope and handoff
 
-- Upload returns a media ID for a later message request. Uploading media does not send a message; hand off the media ID to Messages. This MVP does not read or upload a real local file.
+- Upload returns a media ID for a later message request. Uploading media does not send a message; hand off the media ID to Messages. Use only the file and phone-number scope covered by the user's request.
 - Operation coverage: `1`
 
 ## Operations

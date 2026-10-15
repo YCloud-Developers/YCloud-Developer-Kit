@@ -12,13 +12,14 @@ capabilities use `full-supported-operations` instead.
   test for every implemented operation. Cross-domain rows additionally require
   producer/consumer handoff evidence.
 - Do not require or generate a dashboard or test console. The default project
-  delivery is server-side TypeScript/Fastify seams plus no-network tests.
+  delivery is server-side seams in the project's existing stack plus no-network tests.
 - Disclose the nonselected 28 third-wave operations as covered by the broader
   `full-supported-operations` mode and the 7 SMS/Verify/Voice/Email operations
   as `excluded-by-product-decision`. Do not describe product exclusion as
   provider deprecation.
-- Keep all external calls, credentials, customer data, and remote mutations out
-  of generated artifacts and verification.
+- Keep secrets and customer data out of generated examples and test fixtures.
+  Local coverage tests remain synthetic; separately requested live operations
+  follow the shared execution policy and produce distinct live evidence.
 
 Completion requires 62 explicit statuses with no silent omissions. A route
 label, sample payload, generated type, or shared no-op seam is not operation

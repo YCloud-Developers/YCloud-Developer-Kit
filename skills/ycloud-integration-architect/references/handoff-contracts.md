@@ -10,6 +10,9 @@ consumer
 capability_ids
 mode_and_scope
 authorization_level
+authorization_scope_and_source
+credential_reference_not_value
+execution_environment
 preconditions
 input_contract
 output_artifact
@@ -19,12 +22,19 @@ test_evidence
 coverage_status
 ```
 
+Preserve the current request and prior authorization across handoffs. A handoff
+is context transfer, not a new approval gate. Ask only about unresolved scope
+or effects outside that authorization. Results must distinguish local tests,
+live request acceptance, and verified final state.
+
 ## Required handoffs
 
 ### Authentication → API domains
 
 Provide the trusted-server `X-API-Key` injection boundary, configuration name,
-and redaction behavior. Never pass a real key or imply it was validated.
+and redaction behavior. Pass the credential reference, never the key value.
+Carry any scoped validation result with its actual evidence; do not claim
+validation merely from configuration presence.
 
 ### Media → Messages
 

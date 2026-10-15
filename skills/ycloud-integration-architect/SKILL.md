@@ -1,19 +1,36 @@
 ---
 name: ycloud-integration-architect
-description: Design, implement, or evaluate a cross-domain YCloud integration from local project context, with explicit scope, deliverable, mutation boundaries, domain handoffs, and coverage evidence. Use for broad integration or multi-domain orchestration; do not use for readiness, repository-maintenance, issue-tracker, support, or requests confined to one domain.
+description: Execute, design, implement, or evaluate a cross-domain YCloud integration from task and project context, with explicit scope, deliverable, authorization boundaries, domain handoffs, and coverage evidence. Use for broad integration or multi-domain orchestration; do not use for readiness, repository-maintenance, issue-tracker, support, or requests confined to one domain.
 ---
 
 # YCloud Integration Architect
 
-Orchestrate a contract-aware YCloud integration across every Developer Kit-owned
-domain. Normalize the request before acting, delegate
-domain contract decisions to the matching Skill, and merge their evidence into
-one result. Never call a real YCloud API, read credentials or customer data, or
-infer permission for an external action from permission to edit local files.
+Orchestrate cross-domain YCloud design, implementation, evaluation, and real
+operations. Route domain contract decisions to the matching Skill and merge
+their results, preserving the user’s request and existing authorization.
 
 ## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
+
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 ## Normalize the request
 
@@ -21,8 +38,9 @@ Resolve these dimensions from the user's words and project context:
 
 ```text
 scope: focused | full-first-wave | full-whatsapp-operations | full-supported-operations
-deliverable: project-integration | test-console | production-plan
-mutation: read-only | local-write-authorized
+deliverable: project-integration | test-console | production-plan | live-operation
+mutation: read-only | local-write-authorized | live-read-authorized | live-write-authorized
+authorization_scope: account, environment, targets, operations, credential reference
 ```
 
 - Default to `focused` when the user names a concrete outcome or domain.
@@ -38,9 +56,13 @@ mutation: read-only | local-write-authorized
   dashboard on its own.
 - Select `production-plan` for production architecture or rollout planning. It
   is read-only unless the user separately asks to implement local artifacts.
-- Local implementation authorization permits writes only inside the scoped
-  project. It never permits sending, uploading, deleting, rotating, changing a
-  remote endpoint, or otherwise calling a real provider API.
+- Select `live-operation` for a requested real query or action. Derive live-read
+  or live-write authorization from the request and prior grants; do not ask the
+  user to restate it in these labels. Carry the resolved scope across domains.
+- Local implementation alone permits project work, not incidental live effects.
+  A request combining implementation and a live check can authorize both.
+  Keep account/environment and target limits explicit without adding an approval
+  step when those facts are already available.
 
 Read only the selected mode reference:
 
@@ -50,6 +72,7 @@ Read only the selected mode reference:
 - `full-supported-operations` → [references/modes/full-supported-operations.md](references/modes/full-supported-operations.md)
 - `test-console` → [references/modes/test-console.md](references/modes/test-console.md)
 - `production-plan` → [references/modes/production-plan.md](references/modes/production-plan.md)
+- `live-operation` → [shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization); use focused routing for the selected operations
 
 When scope or completion is material, also read
 [references/capability-catalog-summary.md](references/capability-catalog-summary.md)
@@ -61,9 +84,9 @@ For multi-domain work, read
 
 | Concern | Owner Skill | Boundary |
 | --- | --- | --- |
-| API key, trusted-server header, storage, API-key rotation plan | `ycloud-api-authentication` | Never read or validate a real key; generic secret rotation must be disambiguated |
-| Direct/queued message send construction or retrieve | `ycloud-whatsapp-messages` | Existing-template sending belongs here; accepted is not final |
-| WhatsApp media upload construction | `ycloud-whatsapp-media` | Return a media handoff; upload is not send |
+| API key, trusted-server header, storage, API-key rotation plan | `ycloud-api-authentication` | Use configured credentials without exposing them; resolve ambiguous rotation targets |
+| Direct/queued message send or retrieve | `ycloud-whatsapp-messages` | Existing-template sending belongs here; accepted is not final |
+| WhatsApp media upload | `ycloud-whatsapp-media` | Return a media handoff; upload is not send |
 | Template lifecycle and analytics | `ycloud-whatsapp-templates` | Lifecycle is separate from template sending |
 | Webhook endpoint management or receiver | `ycloud-webhook-endpoints` | Endpoint management and event receipt remain separate |
 | WABA inventory or ACO settings | `ycloud-whatsapp-business-accounts` | Pass opaque WABA identity to Phone Numbers/Messages/Templates |
@@ -112,13 +135,15 @@ a test console was requested.
 When local writes are authorized, implement the smallest complete vertical seam
 for the selected scope and run proportionate no-network tests. Preserve unrelated
 and concurrent edits. When writes are not authorized, provide a plan with
-concrete project seams and do not change files. Do not apply project changes
-unless the user has explicitly authorized local writes for that scoped project.
+concrete project seams and do not change files. A request to implement or fix
+the scoped project is sufficient local-write authorization; do not ask again.
+Direct live operations do not require a local project or generated code.
 
 ## Contract rules
 
 - Exact paths, methods, schemas, and descriptions come from the selected
-  generated reference. Use placeholders and synthetic IDs.
+  generated reference. Use placeholders and synthetic IDs in examples/tests,
+  and scoped real identifiers for authorized operations.
 - `operationId`, codegen extensions, generated model names, and `allOf` do not
   establish an SDK method or new provider behavior.
 - Use `runtime.md` for the documented error envelope, request ID, rate limits,
@@ -160,26 +185,28 @@ Always make these facts easy to verify:
 - confirmed project facts and source provenance;
 - selected capability rows and domain owners;
 - architecture and cross-domain handoffs;
-- local changes or proposed seams, with no claim that external actions ran;
+- local changes, proposed seams, or observed live results, as applicable;
 - tests/evidence and accepted-versus-final state boundaries;
 - deferred, blocked, unknown, unsupported, and authorization-gated items;
 - next action needed from the user, if any.
 
 ### CANNOT
 
-Keep real credentials, customer data, unconfirmed SDK behavior, unsupported
-operations, and invented provider guarantees out of the result. Treat real
-sends, uploads, deletes, endpoint changes, secret rotations, and production
-changes as high-risk external actions. Local-write authorization never permits
-them, and this workflow does not execute them.
+Keep secret values, unrelated customer data, unconfirmed SDK behavior,
+unsupported operations, and invented provider guarantees out of the result.
+Check exact targets and effects for destructive or disruptive actions, execute
+within existing authorization, and verify outcomes. An ambiguous mutation
+requires reconciliation, not blind replay or a fabricated success claim.
 
 ### Handoff
 
 Return a merged coverage/evidence result to the user. If further work requires a
-new project scope, external action, production mutation, or missing material
-decision, identify the owner and request that authorization or fact explicitly.
+new scope or a missing material decision not covered by existing authorization,
+identify the owner and ask for only that authorization or fact. Continue
+already-authorized work without restarting approval at domain handoffs.
 Do not substitute a list of Skills the user must invoke for the merged result.
 
-Use placeholders and synthetic data. Readiness belongs to the smoke Skill.
+Use placeholders and synthetic data in examples/tests. Installation readiness
+belongs to the smoke Skill; requested live checks use the domain execution policy.
 Repository maintenance, issue tracking, ordinary product explanation, and
 support cases remain outside this Skill.

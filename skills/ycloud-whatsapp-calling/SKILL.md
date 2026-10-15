@@ -1,26 +1,36 @@
 ---
 name: ycloud-whatsapp-calling
-description: Design, implement locally, or evaluate YCloud WhatsApp Calling connect, pre-accept, accept, reject, terminate, and call-media download operations. Use for API-sourced call sessions after Phone Numbers and Webhook Receiver handoffs; exclude calling settings, media upload, message operations, and real API calls.
+description: Execute, design, implement, or evaluate YCloud WhatsApp Calling connect, pre-accept, accept, reject, terminate, and call-media download operations. Use for API-sourced call sessions after Phone Numbers and Webhook Receiver handoffs; exclude calling settings, media upload, message operations.
 ---
 
 # YCloud WhatsApp Calling
 
-Design or implement contract-aware WhatsApp Calling session commands and call
-media downloads. Keep every example synthetic and every transport mock-only;
-never call YCloud or Meta, inspect credentials or customer data, or claim that a
-real call changed state.
+Execute WhatsApp Calling session commands and call media downloads, or design,
+implement, and evaluate their integration. Verify session state independently
+from command acceptance.
 
 ## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
 
-Honor Architect handoffs for scope, deliverable, mutation, capability IDs,
-project seams, and evidence. Without one, default to focused read-only guidance
-unless the user explicitly requests local implementation. Local-write
-authorization permits trusted-server request builders, adapters, handlers,
-state models, synthetic webhook fixtures, mock transports, and no-network tests
-inside the scoped project. It never authorizes a real call command or media
-download.
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 After this Skill is selected, read the generated [OpenAPI
 contract](references/openapi.md) and reviewed [runtime
@@ -115,7 +125,7 @@ values in separately named fields:
    concerns the upstream media operation; it does not authorize replay of a
    call command or download request. Require fresh session evidence and an
    explicit application-owned decision before any new command.
-9. Use placeholders such as `<YCLOUD_API_KEY>`, `<PHONE_ID>`,
+9. In examples and tests, use placeholders such as `<YCLOUD_API_KEY>`, `<PHONE_ID>`,
    `<SYNTHETIC_WACID>`, `<E164_PHONE_NUMBER>`, and `<MEDIA_ASSET_ID>`. Tests must
    use a fake transport that fails closed on real base URLs, credentials, or
    network clients.
@@ -128,7 +138,7 @@ Produce a typed handoff only after verified `whatsapp.call.recording.updated` or
 - event type, webhook `event.id`, `wacid`, `phoneId`, `mediaAssetId`, and
   `AVAILABLE` status, each in a separate field;
 - owning-tenant context, media kind, 30-day expiry/freshness evidence, and the
-  mock-only download authorization decision;
+  download authorization scope and selected live or mock environment;
 - complete-file semantics, expected `.ogg` or `.json` attachment, no byte-range
   support, redacted request ID, and destination/storage policy owned by the
   consuming application.
@@ -154,9 +164,9 @@ contract**, **Incoming handoffs**, **Construction or implementation**,
 evidence**, **CANNOT**, and **Handoff**. Return capability status, artifacts,
 results, unknowns, and outgoing handoffs to Architect when applicable.
 
-## Safety stop
+## Execution safeguards
 
-YCloud Provider API calls are prohibited during Skill execution, including the
-media GET. Stop before any request using a real key, tenant, phone, call, event,
-message, media, SDP, or customer identifier. Never claim a call or media
-session changed in production.
+Execute only within the account, environment, targets, and effects covered by
+the current request or prior authorization. Ask for an unresolved material
+boundary, not for repeated approval of the same operation. Verify live results
+and keep mock evidence separate; never blindly replay an ambiguous mutation.

@@ -12,7 +12,7 @@
 
 ## Scope and handoff
 
-- These fifteen operations cover phone-number registration, profile, settings, commerce, business username, and contact-book boundaries. Mutations remain mock-only.
+- These fifteen operations cover phone-number registration, profile, settings, commerce, business username, and contact-book boundaries. Apply the shared execution policy.
 - Operation coverage: `15`
 
 ## Operations

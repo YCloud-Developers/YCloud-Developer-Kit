@@ -9,8 +9,11 @@ not a prescribed frontend.
   appropriate; never introduce a framework without project/user support.
 - Drive controls from the selected capability catalog. Support conditional
   request fields instead of a single hard-coded JSON body.
-- Default to synthetic/mock execution. Keep real sends, uploads, deletes,
-  rotations, and remote endpoint mutations disabled and visibly gated.
+- Use synthetic/mock execution when no live execution is requested. When live
+  operation is in scope, connect the authorized account through a server-side
+  adapter and show the environment and target clearly. Reuse established
+  authorization without adding repeated confirmation dialogs. Keep mock-only
+  runs isolated and never fall back to live credentials or endpoints.
 - Show request validation, provider error envelope, `YCloud-Request-ID`,
   pagination/rate-limit metadata where applicable, and accepted versus final
   status separately.

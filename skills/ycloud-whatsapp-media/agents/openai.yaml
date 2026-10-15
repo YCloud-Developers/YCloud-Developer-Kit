@@ -1,6 +1,6 @@
 interface:
   display_name: "YCloud WhatsApp Media"
-  short_description: "Design or implement WhatsApp media upload handling"
-  default_prompt: "Use $ycloud-whatsapp-media to design or implement a safe WhatsApp media upload handoff."
+  short_description: "Operate or integrate WhatsApp media upload handling"
+  default_prompt: "Use $ycloud-whatsapp-media to execute or implement a safe WhatsApp media upload handoff."
 policy:
   allow_implicit_invocation: true

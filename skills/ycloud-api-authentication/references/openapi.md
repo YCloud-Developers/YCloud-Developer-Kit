@@ -12,14 +12,14 @@
 
 ## Scope and handoff
 
-- The source declares one global `api_key` security scheme: send a placeholder value in the `X-API-Key` header from a trusted server. This reference never reads, validates, echoes, or stores a real key.
+- The source declares one global `api_key` security scheme: send a configured credential in the `X-API-Key` header from a trusted server. Use placeholders in examples and protect secret values during authorized operations.
 - Operation coverage: `0`
 
 ## Authentication contract
 
 - Global security requirement: `api_key`.
 - Scheme: `apiKey`, header name `X-API-Key`.
-- Use a placeholder such as `<YCLOUD_API_KEY>` in examples; never read or verify a real secret.
+- Use a placeholder such as `<YCLOUD_API_KEY>` in examples; inject the configured credential through a trusted runtime for authorized operations without exposing it.
 - Keep the key server-side, out of browsers/mobile clients, URLs, logs, repositories, and customer data.
 
 ## Codegen interpretation

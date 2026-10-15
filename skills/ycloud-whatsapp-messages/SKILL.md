@@ -1,24 +1,35 @@
 ---
 name: ycloud-whatsapp-messages
-description: Design, implement locally, or evaluate contract-aware WhatsApp message submission and retrieval for direct, queued, or existing-template sends, including conditional request semantics and accepted-versus-final status handling. Use for message send/retrieve intent; exclude template lifecycle, media upload, webhook endpoint management, authentication-only, readiness, and repository maintenance.
+description: Execute, design, implement, or evaluate contract-aware WhatsApp message submission and retrieval for direct, queued, or existing-template sends, including conditional request semantics and accepted-versus-final status handling. Use for message send/retrieve intent; exclude template lifecycle, media upload, webhook endpoint management, authentication-only, readiness, and repository maintenance.
 ---
 
 # YCloud WhatsApp Messages
 
-Design or implement project-local support for the three message operations in the generated reference. Never call YCloud, send a real message, read credentials or customer data, or claim that a submission was delivered.
+Send and retrieve WhatsApp messages or design, implement, and evaluate the
+three documented message operations. Submission acceptance is not delivery.
 
 ## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
 
-Honor Architect handoffs for `scope`, `deliverable`, `mutation`, capability IDs,
-project seams, and expected evidence. Without one, default to focused scope and
-read-only guidance unless the user explicitly requests local implementation.
-Local-write authorization permits request builders, adapters, handlers,
-test-console bindings, mocks, and no-network tests inside the scoped project. It
-never authorizes a real send or retrieve call. A `test-console` must expose the
-selected conditional message shapes and must reuse the project's existing UI or
-interface stack; do not create a dashboard or choose a framework on your own.
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 ## Scope and operation routing
 
@@ -72,7 +83,7 @@ Do not execute these snippets. Do not put real keys, phone numbers, message bodi
 
 ## Outcome requirements
 
-Adapt the result to planning, implementation, or evaluation. Preserve the
+Adapt the result to planning, implementation, execution, or evaluation. Preserve the
 following contract and evidence outcomes:
 
 ### Operation and Contract
@@ -96,7 +107,7 @@ For every selected send operation, `to`/`recipient` tests are mandatory. Cover: 
 
 ### CANNOT
 
-List unsupported operations and unknowns: real API/message calls, actual customer data or credentials, template lifecycle, media upload, blind POST replay, delivery claims, guessed SDK methods/artifacts, general idempotency/exactly-once behavior, unlisted operation errors, or final-state guarantees. Do not put documented quotas, `429`, `Retry-After`, the standard error envelope, or asynchronous error routing into `CANNOT`. External mutations remain gated independently from local writes and are never executed by this workflow.
+List unsupported operations and unknowns: secret disclosure, out-of-scope sends or data access, template lifecycle, media upload, blind POST replay, delivery claims, guessed SDK methods/artifacts, general idempotency/exactly-once behavior, unlisted operation errors, or final-state guarantees. Do not put documented quotas, `429`, `Retry-After`, the standard error envelope, or asynchronous error routing into `CANNOT`. Execute real sends or retrieves when covered by the request or existing authorization, and report the observed outcome.
 
 ### Handoff
 
@@ -104,4 +115,4 @@ Send template create/edit/list/retrieve/delete/analytics to Templates. Send medi
 
 ## Safety and source priority
 
-Use the exact OpenAPI path/schema first, generated reference second, and this workflow third. Keep `operationId` and codegen extensions as identifiers/hints, not SDK methods or business rules. Use placeholders (`<YCLOUD_API_KEY>`, `<YCLOUD_API_BASE_URL>`) and synthetic identifiers only. Shell and local project writes are permitted only when needed for an explicitly requested local implementation; network API, credential, customer-data, and external side effects remain prohibited.
+Use the exact OpenAPI path/schema first, generated reference second, and this workflow third. Keep `operationId` and codegen extensions as identifiers/hints, not SDK methods or business rules. Use placeholders (`<YCLOUD_API_KEY>`, `<YCLOUD_API_BASE_URL>`) and synthetic identifiers in examples and tests. For live operations use scoped identities, protected credential injection, and the shared execution policy.

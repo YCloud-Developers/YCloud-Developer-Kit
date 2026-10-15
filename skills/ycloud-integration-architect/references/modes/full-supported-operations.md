@@ -18,8 +18,9 @@ capabilities or the `0.6.0` full supported operations wave.
 - Disclose SMS, Verify, Voice, and Email as 7 operations
   `excluded-by-product-decision`. Do not describe product exclusion as provider
   deprecation or claim coverage of all 95 operations.
-- Keep credentials, customer data, real provider calls, and remote mutations out
-  of generated artifacts and verification.
+- Keep secrets and customer data out of generated examples and test fixtures.
+  Local coverage tests remain synthetic; separately requested live operations
+  follow the shared execution policy and produce distinct live evidence.
 
 Completion requires 90 explicit statuses with no silent omissions. A route
 label, sample payload, generated type, shared no-op seam, or repeated assertion

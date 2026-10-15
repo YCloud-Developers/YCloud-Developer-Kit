@@ -1,25 +1,35 @@
 ---
 name: ycloud-balance
-description: Design, implement locally, or evaluate retrieval and interpretation of the YCloud account balance. Use for the single Balance read operation or a balance-to-readiness evidence handoff; exclude plugin readiness checks, billing history, top-ups, and real API operations.
+description: Execute, design, implement, or evaluate retrieval and interpretation of the YCloud account balance. Use for the single Balance read operation or a balance-to-readiness evidence handoff; exclude plugin readiness checks, billing history, top-ups.
 ---
 
 # YCloud Balance
 
-Design or implement contract-aware retrieval of the current account balance.
-Use synthetic responses and a mock transport only; never call YCloud, read a
-credential, expose customer financial data, or claim a live balance was checked.
+Retrieve the current account balance or design, implement, and evaluate its
+integration. Report the provenance and freshness of observed balance data.
 
 ## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
 
-Honor an Architect handoff for scope, deliverable, mutation, capability ID,
-project seams, and evidence. Without one, default to focused read-only guidance
-unless the user explicitly requests local implementation. Local-write
-authorization permits a trusted-server adapter, typed response mapping,
-mock-only handler/service bindings, fixtures, and no-network tests in the scoped
-project. It never authorizes a live balance request or production readiness
-decision.
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 ## Scope and handoffs
 
@@ -72,9 +82,9 @@ reservation, or fail-open/fail-closed rule labeled as project policy.
    Because retrieval is read-only, a bounded transient retry may be proposed as
    project policy, but no retry count, backoff, cache lifetime, or staleness
    tolerance is a YCloud guarantee unless `runtime.md` says so.
-6. Keep the API key on a trusted server and use placeholders only. A local
-   handler or readiness consumer must call a fake adapter and visibly
-   label its data synthetic; it must not offer a control that reaches YCloud.
+6. Keep the API key on a trusted server. Use placeholders and a fake adapter
+   for local tests; label synthetic results. For a requested balance query,
+   call the configured account and report amount, currency, and observation time.
 
 ## Illustrative raw HTTP
 
@@ -96,7 +106,7 @@ in examples, fixtures, logs, or generated artifacts.
 
 ## Outcome requirements
 
-Adapt the result to planning, implementation, or evaluation, while making these
+Adapt the result to planning, implementation, execution, or evaluation, while making these
 items explicit:
 
 1. **Matched contract** — source hash, `GET /balance`, `balance-retrieve`, no
@@ -115,7 +125,7 @@ items explicit:
    values; synthetic error/request-ID fixtures; `429` scheduling; timeout and
    bounded-retry policy; readiness handoff without a readiness claim; and proof
    that no network call occurs.
-6. **CANNOT** — live balance retrieval, credentials or real financial data,
+6. **CANNOT** — secret disclosure, out-of-scope financial data,
    mutations/top-ups/history, currency conversion, affordability or readiness
    guarantees, inferred SDK methods, invented quotas/errors, or unlabelled
    caching and threshold policy.
@@ -128,5 +138,5 @@ items explicit:
 
 Use the pinned OpenAPI source first, generated references second, and this
 workflow third. Keep provider contract, reviewed runtime facts, and project
-policy visibly separate. External reads and mutations remain prohibited even
-when local implementation is authorized.
+policy visibly separate. Apply the shared execution policy to real operations
+and keep local verification synthetic.

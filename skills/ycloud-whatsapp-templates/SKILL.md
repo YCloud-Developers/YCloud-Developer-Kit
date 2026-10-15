@@ -1,25 +1,35 @@
 ---
 name: ycloud-whatsapp-templates
-description: Design, implement locally, or evaluate YCloud WhatsApp template create, list, retrieve, edit, delete, and analytics operations. Use for template lifecycle integration; do not use for sending template messages, media uploads, readiness, broad integration planning, or real template/API mutations.
+description: Execute, design, implement, or evaluate YCloud WhatsApp template create, list, retrieve, edit, delete, and analytics operations. Use for template lifecycle integration; do not use for sending template messages, media uploads, readiness, broad integration planning.
 ---
 
 # YCloud WhatsApp Templates
 
-Design or implement safe, contract-aware WhatsApp template lifecycle and
-analytics work. This skill never mutates a real template.
+Create, query, edit, delete, and analyze WhatsApp templates, or design,
+implement, and evaluate their lifecycle integration.
 
 ## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
 
-Honor Architect handoffs for `scope`, `deliverable`, `mutation`, capability IDs,
-project seams, and expected evidence. Without one, default to focused scope and
-read-only guidance unless the user explicitly requests local implementation.
-Local-write authorization permits request models/builders, adapters, handlers,
-component editors, test-console bindings, mocks, and no-network tests in the
-scoped project. It does not authorize create, edit, delete, analytics, or any
-other real API call. Reuse the project's existing UI/interface stack and do not
-generate a dashboard or bind a framework without user/project support.
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 ## Trigger boundary
 
@@ -47,8 +57,9 @@ and stop.
 ## Workflow
 
 1. Establish the user’s intended lifecycle operation and the target server-side
-   project context. Ask for missing language, framework, environment, or
-   template identity rather than inferring them.
+   context. Resolve account/environment and template identity from available
+   evidence; ask only for missing material facts. A direct API task does not
+   require choosing a language or framework.
 2. Match exactly one of the seven operations in the generated reference. Keep
    lifecycle operations separate from message sending. Preserve source-defined
    path parameters, request/response schemas, enum values, and description-only
@@ -94,8 +105,8 @@ and stop.
    Apply the same request validator before both sandbox storage and live
    transport so live mode cannot bypass component/category/button validation.
 4. Keep API keys server-side and out of browser/mobile code, URLs, logs, source
-   control, and snippets. Do not read `.env`, secret stores, logs, customer
-   templates, or live analytics.
+   control, and snippets. Use scoped credential injection for live operations
+   and read only templates or analytics needed for the request.
 5. For create/edit/delete, describe the planned change and its validation and
    rollback considerations. An edit is a full content replacement: include all
    components that must survive, and allow it only for `APPROVED`, `REJECTED`,
@@ -113,23 +124,22 @@ and stop.
    request construction without extra components. Retrieve/edit tests must
    assert that the captured provider path includes the WABA ID. Also test that
    live and sandbox handlers reject the same invalid component payload before
-   transport. Do not call YCloud or alter a template.
+   transport. These unit/contract tests use mocks; report live checks separately.
 7. Treat create/edit/delete timeouts as ambiguous outcomes and never replay
    automatically. Any project idempotency ledger, outbox, retry budget, or RFC
    9457 response is local architecture, not a YCloud contract.
 
 ## High-risk delete handling
 
-Treat both delete operations as high-risk. Stop before execution, state the
-target and potential impact, request explicit confirmation in a future approved
-workflow, and outline a verification/rollback plan only where the source or
-project facts support it. The MVP performs no delete, create, edit, or other
-external API action. Never imply that deleting a template withdraws or changes
+For both delete operations, establish the WABA, name, and whether deletion
+affects one language or all matching languages. If that scope and effect are
+already authorized, execute without asking again; otherwise clarify only the
+missing boundary. Verify the outcome and describe rollback only when supported. Never imply that deleting a template withdraws or changes
 already-submitted messages.
 
 ## Outcome requirements
 
-Adapt the result to planning, implementation, or evaluation. Preserve these
+Adapt the result to planning, implementation, execution, or evaluation. Preserve these
 contract and evidence outcomes:
 
 1. **Matched contract** — source hash, selected operation, exact path/method,
@@ -137,7 +147,7 @@ contract and evidence outcomes:
 2. **Lifecycle plan** — placeholder raw HTTP or project-local construction and
    the intended create/list/retrieve/edit/delete/analytics behavior.
 3. **Safety and integration placement** — server-side boundary, credential
-   handling, validation, and (for delete) high-risk confirmation stop.
+   handling, validation, and exact deletion scope under existing authorization.
 4. **Tests** — synthetic contract, mapping, and negative tests with no live call.
 5. **CANNOT** — unknown metrics or runtime behavior, unsupported operations,
    unconfirmed SDK methods, missing project facts, and actions not performed.
@@ -148,7 +158,8 @@ contract and evidence outcomes:
 
 ## Non-goals
 
-Do not consume webhook payloads, verify signatures, upload media, send messages,
-read credentials, make unrequested local changes, or invoke a remote API. A
+Route webhook consumption, signature verification, media upload, and message
+sending to their owner Skills when required by the authorized task. Do not make
+unrequested project changes or broaden the operation scope. A
 template lifecycle result is not a sent or delivered message; keep that
 distinction in every example and handoff.

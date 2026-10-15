@@ -1,26 +1,36 @@
 ---
 name: ycloud-contacts
-description: Design, implement locally, or evaluate YCloud Contacts lifecycle, attribute, and note operations with strict contact/note ID separation and defensive pagination. Use for Contacts API work; exclude Custom Events, Unsubscribers, message sending, and real API mutations.
+description: Execute, design, implement, or evaluate YCloud Contacts lifecycle, attribute, and note operations with strict contact/note ID separation and defensive pagination. Use for Contacts API work; exclude Custom Events, Unsubscribers, message sending.
 ---
 
 # YCloud Contacts
 
-Design or implement contract-aware contact, contact-attribute, and contact-note
-workflows against mocks only. Never call YCloud, read credentials or customer
-data, perform a real mutation, or treat a contact change as a downstream event,
-subscription, or message action.
+Manage contacts, contact attributes, and contact notes, or design, implement,
+and evaluate their integration. A contact change does not itself perform a
+downstream event, subscription, or message action.
 
-## Execution and authority boundary
+## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
 
-Honor an Architect handoff for `scope`, `deliverable`, `mutation`, capability
-IDs, project seams, and evidence. Without one, default to focused, read-only
-guidance unless the user explicitly requests local implementation. Local-write
-authorization permits request models/builders, adapters, handlers, service
-bindings, mocks, fixtures, and no-network tests inside the scoped project. Every
-create, update, or delete remains mock-only; local-write authorization does not
-authorize a real contact or note mutation.
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 Keep claims in three authority layers:
 
@@ -97,7 +107,7 @@ defines syntax. Never substitute one identifier class for another.
    that schema excludes notes.
 4. Use only synthetic contacts, phone numbers, usernames, note IDs, and payloads
    in examples and tests. Keep `X-API-Key` injection server-side through the
-   Authentication handoff without reading a real key. An `operationId` is not an
+   Authentication handoff without exposing a real key. An `operationId` is not an
    SDK method name.
 5. Treat a timeout or lost response for create, update, delete, or note mutation
    as ambiguous. Never replay it automatically. Note create has no client
@@ -134,10 +144,10 @@ first, with a maximum of 50. Do not add page parameters to it.
 
 ## Mutation safeguards and tests
 
-Implement mutations only against mocks and verify them with no-network tests.
-For any future external workflow, stop before the call, identify the exact
-contact identifier or note ID and impact, require explicit operation-specific
-confirmation, and leave an ambiguous result unresolved.
+Use no-network tests for local implementation. For a real mutation, resolve the
+exact contact identifier or note ID and apply the existing authorization. Do
+not ask again when the target and effect are already covered. Reconcile an
+ambiguous result before considering another attempt.
 
 Tests should cover all ten routes and methods, required and optional body shape,
 contact/note ID non-interchangeability, username-first ambiguity, note limits and
@@ -157,8 +167,7 @@ link each implemented row to its adapter/handler and behavioral tests.
 ### CANNOT
 
 List unsupported operations, missing project facts, source conflicts,
-unconfirmed SDK behavior, live credentials/customer data, real API calls,
-external mutations, automatic mutation replay, inferred note ownership, or
+unconfirmed SDK behavior, secret disclosure, out-of-scope access, automatic mutation replay, inferred note ownership, or
 downstream event/subscription/message claims. Do not move documented contact
 identifier resolution, note-ID syntax, or cursor behavior into `CANNOT`.
 

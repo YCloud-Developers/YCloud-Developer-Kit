@@ -1,26 +1,35 @@
 ---
 name: ycloud-whatsapp-flows
-description: Design, implement locally, or evaluate all 9 YCloud WhatsApp Flows operations across draft creation, retrieval, metadata or structure updates, publishing, preview, deprecation, and deletion. Use for Flow lifecycle management; exclude Flow message sending and real API mutations.
+description: Execute, design, implement, or evaluate all 9 YCloud WhatsApp Flows operations across draft creation, retrieval, metadata or structure updates, publishing, preview, deprecation, and deletion. Use for Flow lifecycle management; exclude Flow message sending.
 ---
 
 # YCloud WhatsApp Flows
 
-Design or implement contract-aware WhatsApp Flow lifecycle management against
-mocks only. Never call YCloud, mutate a real Flow, open a live preview URL, read
-credentials or customer data, or imply that managing a Flow sent a message.
+Manage WhatsApp Flow lifecycle and previews or design, implement, and evaluate
+their integration. Managing a Flow does not itself send a message.
 
-## Execution and authority boundary
+## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
 
-Honor an Architect handoff for `scope`, `deliverable`, `mutation`, capability
-IDs, project seams, and evidence. Without one, default to focused, read-only
-guidance unless the user explicitly requests local implementation. Local-write
-authorization permits request models/builders, multipart adapters, handlers,
-handler/service bindings, mocks, fixtures, and no-network tests inside the scoped
-project. Every create, update, publish, deprecate, delete, or preview-link
-invalidation remains mock-only; no authorization level in this Skill permits a
-real API call.
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 Keep claims in three authority layers:
 
@@ -93,13 +102,14 @@ only management of the Flow resource and its preview URL.
    rule, synthesize an endpoint, or weaken a lifecycle gate.
 6. Preview generation returns a public, shareable URL. The reference says it
    expires after 30 days by default and `invalidate=true` generates a new link.
-   Treat the URL as sensitive project output: do not open, crawl, log, commit,
-   or expose a real URL. A GET with `invalidate=true` changes link state, so it
-   remains a mock-only mutation despite its HTTP method.
+   Treat the URL as sensitive project output: return or open it only within
+   the requested preview workflow, and do not log or commit it. A GET with
+   `invalidate=true` changes link state, so include that effect in the scope
+   check rather than treating every GET as read-only.
 7. Use placeholders and synthetic Flow JSON/data in examples and tests. Use an
    SDK method only when a confirmed SDK artifact and version exist in the
    project; operation IDs are not SDK methods. Keep `X-API-Key` injection on a
-   trusted server through the Authentication handoff without reading a real key.
+   trusted server through the Authentication handoff without exposing a real key.
 8. Treat mutating timeouts or lost responses as ambiguous outcomes. Never
    blindly replay create, structure/metadata update, publish, deprecate, delete,
    or preview invalidation. Any idempotency ledger, outbox, retry budget,
@@ -124,11 +134,10 @@ ID correlation, retrieve/status handling, and accepted-versus-final semantics.
 ## Mutation safeguards and tests
 
 Publish, deprecate, delete, clone, replacement of Flow JSON, endpoint URI
-changes, and preview invalidation can be disruptive or irreversible. Implement
-only local mock behavior and no-network tests. For any future external workflow,
-stop before the call, identify the exact opaque Flow/WABA IDs and impact, require
-explicit operation-specific confirmation, and treat an ambiguous result as
-unresolved. Never claim rollback is available unless the provider contract or
+changes, and preview invalidation can be disruptive or irreversible. Resolve
+exact Flow/WABA IDs and effects, then proceed under the request or existing
+authorization. Ask only when a target or material effect remains unresolved.
+Use no-network tests for local code and reconcile ambiguous live results. Never claim rollback is available unless the provider contract or
 project proves it.
 
 Tests should cover every selected route and schema plus relevant negative cases:
@@ -151,8 +160,8 @@ tests.
 ### CANNOT
 
 List unsupported operations, missing project facts, the unresolved published
-Flow editing contradiction, unconfirmed SDK behavior, live preview URLs,
-credentials/customer data, real API calls, external mutations, blind replay,
+Flow editing contradiction, unconfirmed SDK behavior, unauthorized preview
+sharing, secret disclosure, out-of-scope actions, blind replay,
 invented rollback, and message delivery/completion claims. Do not put confirmed
 draft creation, draft-only deletion, deprecation, preview expiry/invalidation,
 or validation-error behavior into `CANNOT`.

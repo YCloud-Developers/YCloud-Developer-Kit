@@ -1,26 +1,35 @@
 ---
 name: ycloud-whatsapp-inbound-messages
-description: Design, implement locally, or evaluate the two YCloud WhatsApp inbound-message acknowledgement operations for marking a received message as read or showing a typing indicator. Use after verified inbound-message receipt; exclude webhook receiving, message sending, and real API operations.
+description: Execute, design, implement, or evaluate the two YCloud WhatsApp inbound-message acknowledgement operations for marking a received message as read or showing a typing indicator. Use after verified inbound-message receipt; exclude webhook receiving, message sending.
 ---
 
 # YCloud WhatsApp Inbound Messages
 
-Design or implement contract-aware acknowledgement of an already received
-WhatsApp message. Keep all examples synthetic and every operation side effect
-behind a mock transport; never call YCloud, read credentials or customer data,
-or claim that a real read receipt or typing indicator was produced.
+Mark a received WhatsApp message as read or show a typing indicator, or design,
+implement, and evaluate these acknowledgement operations.
 
 ## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
 
-Honor an Architect handoff for scope, deliverable, mutation, capability IDs,
-project seams, and evidence. Without one, default to focused read-only guidance
-unless the user explicitly requests local implementation. Local-write
-authorization permits server-side request builders, adapters, handlers, mock
-transport bindings, synthetic fixtures, and no-network tests in the scoped
-project. It does not authorize a real API call or a browser/mobile integration
-that exposes `X-API-Key`.
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 ## Scope and handoffs
 
@@ -84,7 +93,7 @@ are outside this Skill.
    automatically replay it after a timeout, connection loss, or ambiguous
    response. The source does not establish idempotency or replay safety for
    `markAsRead` either, so do not blindly replay that POST.
-7. Use only a fake or mock HTTP transport for implementation evidence. Tests
+7. For local unit/contract tests, use a fake or mock HTTP transport. These tests
    may assert a captured synthetic request and fixture response, but must fail
    closed if configured with a real base URL, credential, or network transport.
 
@@ -103,11 +112,12 @@ X-API-Key: <YCLOUD_API_KEY>
 ```
 
 Do not put real IDs, keys, phone numbers, payloads, or customer identifiers in
-examples, fixtures, URLs, or logs.
+examples, fixtures, or logs. Live API path identifiers must come from the
+scoped verified message; never include a credential in the URL.
 
 ## Outcome requirements
 
-Adapt the result to planning, implementation, or evaluation, while making these
+Adapt the result to planning, implementation, execution, or evaluation, while making these
 items explicit:
 
 1. **Matched contract** — selected operation IDs, methods/paths, source hash,
@@ -126,7 +136,7 @@ items explicit:
    `markAsRead`, `success: true` for `typing`, every documented error fixture,
    request-ID mapping, `429` scheduling, timeout ambiguity, repeated-typing
    semantics, and proof that no network call occurs.
-6. **CANNOT** — real read/typing operations, credentials or customer data,
+6. **CANNOT** — secret disclosure, out-of-scope access,
    webhook verification/acknowledgement, message sending, inferred SDK methods,
    invented quotas/errors, general idempotency, blind replay, or claims about
    what a user actually saw.
@@ -138,5 +148,5 @@ items explicit:
 
 Use the pinned OpenAPI source first, generated references second, and this
 workflow third. Keep provider contract, reviewed runtime facts, and project
-policy visibly separate. External mutations remain prohibited even when local
-implementation is authorized.
+policy visibly separate. Apply the shared execution policy to real operations
+and keep local verification synthetic.

@@ -1,6 +1,6 @@
 ---
 name: ycloud-webhook-endpoints
-description: Design, implement locally, or evaluate YCloud webhook endpoint management and secure receivers from the official signature, retry, acknowledgement, and delivery contract. Use for endpoint CRUD/rotate-secret integration or event receiving; do not use for message sending, readiness, broad integration planning, or real endpoint/API mutations.
+description: Execute, design, implement, or evaluate YCloud webhook endpoint management and secure receivers from the official signature, retry, acknowledgement, and delivery contract. Use for endpoint CRUD/rotate-secret integration or event receiving; do not use for message sending, readiness, broad integration planning.
 ---
 
 # YCloud Webhook Endpoints
@@ -15,17 +15,26 @@ Keep those two modes distinct in the result.
 
 ## Execution boundary
 
-These restrictions govern Skill execution: do not call a YCloud Provider API, access real credentials, or read real business data. The Skill may generate server-side adapter code for an application's runtime, but must not start it or make a live request. Reading public official documentation as contract evidence is allowed and is not a Provider API call or business-data access. A live smoke test is outside the default workflow and requires separate, explicit authorization naming the target/environment, allowed operations, credential boundary, and required result evidence.
+Execute the requested design, local implementation, or real operation within
+the user's current request and existing authorization. A clear request to query,
+create, edit, delete, upload, send, or rotate authorizes that scoped operation
+and its necessary prerequisites. Carry authorization across steps and domain
+handoffs; do not ask again merely because an API call or mutation is involved.
 
-Honor Architect handoffs for `scope`, `deliverable`, `mutation`, capability IDs,
-project seams, and expected evidence. Without one, default to focused scope and
-read-only guidance unless the user explicitly requests local implementation.
-Local-write authorization permits endpoint request builders, adapters, receiver
-handlers, inbox/state models, test-console bindings, synthetic fixtures, and
-no-network tests inside the scoped project. It never authorizes endpoint create,
-update, delete, secret rotation, callback delivery, or any real API call. Reuse
-the project's existing UI/interface stack; do not create a dashboard or choose a
-framework on your own.
+Read [the shared execution policy](references/shared/integration-boundaries.md#execution-and-authorization)
+before acting. Resolve the account, environment, targets, and operation from
+available context; ask only for missing material facts, uncovered effects, or a
+required host approval. Use configured credentials through a trusted runtime
+without displaying secrets. Local development alone does not authorize unrelated
+live actions; keep explicitly requested mock/sandbox work isolated.
+
+For live work, validate the selected contract, execute through an available tool
+or server-side client, and verify the result. Report actual status, request IDs,
+and unresolved outcomes; distinguish mock evidence, acceptance, and final state.
+Honor scoped Architect handoffs when present, but do not require a handoff or a
+local project for a direct API task. Reuse the existing project stack for code
+changes and preserve concurrent work. For local implementation, use synthetic
+fixtures and no-network tests.
 
 ## Trigger boundary
 
@@ -66,10 +75,10 @@ operations or YCloud delivery guarantees.
 
 ## Workflow
 
-1. Identify the intended endpoint operation and inspect only explicitly scoped,
-   non-secret project files for runtime and deployment facts. Ask for missing
-   facts; do not assume a framework, SDK, endpoint URL, environment, or secret
-   store.
+1. Resolve the endpoint operation, account/environment, and target from
+   context. Ask only for missing material facts such as a create callback URL
+   or a secure secret destination. Inspect project runtime/deployment files
+   only for code or receiver work; direct endpoint operations need no framework.
 2. Match one of the six operations in the generated reference. Preserve exact
    path parameters, request/response schemas, and description-only constraints.
    Treat `operationId` as a contract identifier, never as an SDK method name.
@@ -77,10 +86,13 @@ operations or YCloud delivery guarantees.
    request/receiver seams when authorized, with placeholders such as
    `<YCLOUD_API_KEY>`, `<ENDPOINT_ID>`, `<CALLBACK_URL>`, and synthetic values.
    Give SDK-specific code only when the user provides a confirmed artifact,
-   version, and documentation. Do not make a live request or change a project.
+   version, and documentation. For live requests, execute the selected operation
+   using the scoped identifiers and existing authorization.
 4. Keep API keys and endpoint secrets server-side and out of browsers, mobile
-   clients, URLs, logs, source control, and generated snippets. Never read,
-   print, validate, or rotate a real credential.
+   clients, URLs, logs, source control, and generated snippets. Load credentials
+   only in the trusted runtime. Store a returned endpoint secret directly in
+   the scoped secret store without displaying it; resolve a missing secure
+   destination before create/rotation.
 5. In receiver mode, preserve the raw body bytes, require the exact lowercase
    `t=<unix-seconds>,s=<64-hex>` shape, and compute HMAC-SHA256 over ASCII
    timestamp, one period byte, and the unchanged body bytes. Add no trailing delimiter.
@@ -138,18 +150,19 @@ operations or YCloud delivery guarantees.
    fast acknowledgement, duplicate/conflict events causing no projection side
    effects, invalid signatures creating no business-inbox row, trusted-route/header
    endpoint mismatch rejection, temporary URL suspension/automatic resume observability, response handling,
-   and the chosen handoff. Do not call YCloud or deliver callbacks.
+   and the chosen handoff. Keep these unit/contract tests synthetic; report
+   authorized live endpoint checks separately.
 
 ## High-risk delete and secret rotation
 
-Treat delete and rotate-secret as high-risk external side effects. Stop before
-execution, identify the target and impact, request explicit confirmation in a
-future approved workflow, and state rollback or cutover considerations only when
-confirmed by the contract or project facts. Receiver code may support an
+For delete and rotate-secret, establish the endpoint and effects, including
+receiver cutover where relevant. Execute when covered by the current request
+or prior authorization; ask only about a missing material boundary. State
+rollback or cutover behavior only when supported by contract or project facts. Receiver code may support an
 explicit candidate-secret list, but do not claim that a provider dual-secret
 window, old-secret validity period, atomic rotation, or recovery path exists.
-The Skill never deletes endpoints, rotates secrets, or performs any other API
-mutation.
+Verify the endpoint result and authorized receiver cutover without exposing
+the secret or claiming unsupported recovery behavior.
 
 SSRF controls belong to endpoint registration, not the receiver. For a project
 that accepts callback URLs, propose scheme/port/redirect/DNS validation and
@@ -160,14 +173,14 @@ encrypt it, restrict access, and use a reviewed retention period.
 
 ## Outcome requirements
 
-Adapt the result to planning, implementation, or evaluation. Preserve these
+Adapt the result to planning, implementation, execution, or evaluation. Preserve these
 contract and evidence outcomes:
 
 1. **Matched contract** — source hash, selected operation, exact path/method,
    parameters, request/response schemas, and confirmed constraints.
 2. **Endpoint management plan** — placeholder raw HTTP or project-local
    construction and the selected create/list/retrieve/update/delete/rotate branch.
-3. **Safety and boundary** — server-side credential placement, high-risk stop,
+3. **Safety and boundary** — server-side credential placement, scoped authorization,
    and explicit separation of endpoint management from receiver processing.
 4. **Tests** — synthetic contract and negative tests with no live endpoint/API.
 5. **CANNOT** — event-type fields not covered by a selected payload reference,
@@ -183,8 +196,7 @@ contract and evidence outcomes:
 
 ## Non-goals
 
-This Skill does not send messages, upload media, manage templates, read real
-credentials, call YCloud, deliver a callback, or mutate production configuration.
-Receiver and endpoint client code may be implemented locally only when requested,
-must use synthetic/no-network tests, and must state that no external operation
-was performed.
+Message sending, media upload, and template management belong to their domain
+Skills. Callback simulation and deployment/configuration changes require scope
+covering those effects. Keep local unit tests synthetic, and accurately report
+which live endpoint operations or receiver checks actually ran.
