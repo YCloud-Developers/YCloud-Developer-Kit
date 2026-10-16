@@ -1,11 +1,11 @@
 {
-  "version": "0.7.10",
+  "version": "0.7.11",
   "skillCount": 17,
-  "sourceArchive": "ycloud-developer-kit-0.7.10.zip",
-  "sourceArchiveSha256": "8c389216b3538bdf16314d7ae17129d611dbd5587aaca2244910659d189a7e85",
+  "sourceArchive": "ycloud-developer-kit-0.7.11.zip",
+  "sourceArchiveSha256": "9edc91184677e43ead44d0453b503c571c50ad596a9a5444e1a51d7eb00d31ff",
   "files": {
     "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
-    "README.md": "46efcb8847b020a299c5bbbd3e6819edd44b0c9f2514ecba9d784844e5feccc1",
+    "README.md": "967efcfc1adf238763bf2760ad46f9e5f42fac16f4f511dadfeb12b38da9d05e",
     "skills/ycloud-api-authentication/SKILL.md": "3a5c07039883f7d0c7fe4be804fa4dd018116ff006692678ece3a8afa46a0ad1",
     "skills/ycloud-api-authentication/agents/openai.yaml": "c24428b63d97b8bfc485e5a816fc3e357a1be1df34f8e4b4bf71cfe7794e3a85",
     "skills/ycloud-api-authentication/references/openapi.md": "4531ec8c3e3cb007a751ac889ed0a2193c967d07ee1ecd013b3d870f4c40b4b4",
